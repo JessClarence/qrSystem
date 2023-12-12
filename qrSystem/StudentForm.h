@@ -1,6 +1,12 @@
 #pragma once
 #include "User.h"
 #include "dbConnection.h"
+#include "GenerateQR.cpp"
+#include <iostream>
+#include <sstream>
+#include <string>
+#include <vector>
+#include "qrcodegen.h"
 
 namespace qrSystem {
 
@@ -10,6 +16,11 @@ namespace qrSystem {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+	
+	/*using std::uint8_t;
+	using qrcodegen::QrCode;
+	using qrcodegen::QrSegment;*/
+
 
 	/// <summary>
 	/// Summary for StudentForm
@@ -30,6 +41,8 @@ namespace qrSystem {
 	private: System::Windows::Forms::TextBox^ txtConPerson;
 	private: System::Windows::Forms::Label^ label4;
 	private: System::Windows::Forms::Label^ lblContactPerson;
+	private: System::Windows::Forms::Button^ button1;
+
 	private: System::Windows::Forms::Label^ lblContactNo;
 
 
@@ -87,7 +100,7 @@ namespace qrSystem {
 
 
 	private: System::Windows::Forms::Button^ btnEdit;
-	private: System::Windows::Forms::Button^ button1;
+
 	private: System::Windows::Forms::Panel^ panel3;
 	private: System::Windows::Forms::TextBox^ txtAddress;
 	private: System::Windows::Forms::Label^ label2;
@@ -125,7 +138,6 @@ namespace qrSystem {
 			this->lblPhone = (gcnew System::Windows::Forms::Label());
 			this->lblAddress = (gcnew System::Windows::Forms::Label());
 			this->btnEdit = (gcnew System::Windows::Forms::Button());
-			this->button1 = (gcnew System::Windows::Forms::Button());
 			this->panel3 = (gcnew System::Windows::Forms::Panel());
 			this->label6 = (gcnew System::Windows::Forms::Label());
 			this->txtConNo = (gcnew System::Windows::Forms::TextBox());
@@ -145,6 +157,7 @@ namespace qrSystem {
 			this->label9 = (gcnew System::Windows::Forms::Label());
 			this->lblContactPerson = (gcnew System::Windows::Forms::Label());
 			this->lblContactNo = (gcnew System::Windows::Forms::Label());
+			this->button1 = (gcnew System::Windows::Forms::Button());
 			(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pic))->BeginInit();
 			this->panel3->SuspendLayout();
 			this->SuspendLayout();
@@ -153,7 +166,7 @@ namespace qrSystem {
 			// 
 			this->pic->Location = System::Drawing::Point(540, 12);
 			this->pic->Name = L"pic";
-			this->pic->Size = System::Drawing::Size(265, 167);
+			this->pic->Size = System::Drawing::Size(378, 343);
 			this->pic->SizeMode = System::Windows::Forms::PictureBoxSizeMode::CenterImage;
 			this->pic->TabIndex = 0;
 			this->pic->TabStop = false;
@@ -214,15 +227,6 @@ namespace qrSystem {
 			this->btnEdit->Text = L"EDIT";
 			this->btnEdit->UseVisualStyleBackColor = true;
 			this->btnEdit->Click += gcnew System::EventHandler(this, &StudentForm::btnEdit_Click);
-			// 
-			// button1
-			// 
-			this->button1->Location = System::Drawing::Point(624, 185);
-			this->button1->Name = L"button1";
-			this->button1->Size = System::Drawing::Size(130, 23);
-			this->button1->TabIndex = 20;
-			this->button1->Text = L"GENERATE QR";
-			this->button1->UseVisualStyleBackColor = true;
 			// 
 			// panel3
 			// 
@@ -481,11 +485,21 @@ namespace qrSystem {
 			this->lblContactNo->TabIndex = 28;
 			this->lblContactNo->Text = L"Contact No:";
 			// 
+			// button1
+			// 
+			this->button1->Location = System::Drawing::Point(667, 373);
+			this->button1->Name = L"button1";
+			this->button1->Size = System::Drawing::Size(130, 23);
+			this->button1->TabIndex = 20;
+			this->button1->Text = L"GENERATE QR";
+			this->button1->UseVisualStyleBackColor = true;
+			this->button1->Click += gcnew System::EventHandler(this, &StudentForm::button1_Click);
+			// 
 			// StudentForm
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
-			this->ClientSize = System::Drawing::Size(817, 445);
+			this->ClientSize = System::Drawing::Size(981, 538);
 			this->Controls->Add(this->lblContactNo);
 			this->Controls->Add(this->lblContactPerson);
 			this->Controls->Add(this->panel3);
@@ -523,6 +537,13 @@ namespace qrSystem {
 	}
 	private: System::Void button4_Click(System::Object^ sender, System::EventArgs^ e) {
 		panel3->Hide();
+	}
+	private: System::Void button1_Click(System::Object^ sender, System::EventArgs^ e) {
+		/*String^ text = "ID: " + id + "\nEMAIL: " + email + "\nPHONE: " + phone + "\nADDRESS: " + address + "\nCONTACT PERSON: "
+			+ contactperson + "\nCONTACT NO: " + contactno;*/
+		String^ text = "\nEMAIL: " + email + "\tPHONE: " + phone + "\nADDRESS: " + address + "\tCONTACT: " + contactperson;
+		System::Drawing::Bitmap^ qrBitmap = qrData::qrGenerate(text);
+		pic->Image = qrBitmap;
 	}
 };
 }
